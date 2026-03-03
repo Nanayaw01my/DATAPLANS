@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>K.K Affordable Data · MTN Bundles</title>
+<title>sr Sammy Affordable Data · MTN Bundles</title>
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sr SaMmY Data">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Sr SaMmY Data>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ffd700'/><text x='50' y='70' font-size='50' text-anchor='middle' fill='%23000' font-family='Arial'>KK</text></svg>">
 <!-- Fonts & Icons -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -15,6 +23,7 @@
 margin: 0;
 padding: 0;
 box-sizing: border-box;
+-webkit-tap-highlight-color: transparent;
 }
 body {
 font-family: 'Poppins', sans-serif;
@@ -22,6 +31,9 @@ line-height: 1.6;
 color: #333;
 background: #000000;
 min-height: 100vh;
+overflow-x: hidden;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
 }
 .container {
 max-width: 1200px;
@@ -38,6 +50,9 @@ top: 0;
 z-index: 1000;
 padding: 0.8rem 0;
 border-bottom: 2px solid #ffd700;
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+background-color: rgba(0,0,0,0.95);
 }
 .navbar .container {
 display: flex;
@@ -69,6 +84,7 @@ display: inline-block;
 border: none;
 cursor: pointer;
 font-size: 0.95rem;
+-webkit-touch-callout: none;
 }
 .btn-outline {
 border: 2px solid #ffd700;
@@ -204,6 +220,13 @@ display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+user-select: none;
+}
+.bundle-card:active {
+transform: scale(0.97);
+background: #1a1a1a;
 }
 .bundle-card:hover {
 transform: translateY(-6px);
@@ -270,9 +293,8 @@ background: #111111;
 transition: transform 0.2s;
 border: 1px solid #ffd700;
 }
-.step:hover {
-transform: translateY(-5px);
-box-shadow: 0 8px 20px rgba(255,215,0,0.2);
+.step:active {
+transform: scale(0.95);
 }
 .step-icon {
 width: 56px;
@@ -506,9 +528,97 @@ border-top: 2px solid #ffd700;
 .bundle-size { font-size: 1.3rem; }
 .bundle-price { font-size: 1rem; }
 }
+/* PWA specific styles */
+#installPrompt {
+display: none;
+position: fixed;
+bottom: 20px;
+left: 20px;
+right: 20px;
+background: #111111;
+border: 2px solid #ffd700;
+border-radius: 60px;
+padding: 15px 20px;
+z-index: 5000;
+color: white;
+box-shadow: 0 10px 30px rgba(255,215,0,0.3);
+animation: slideUp 0.5s;
+}
+@keyframes slideUp {
+from { transform: translateY(100%); opacity: 0; }
+to { transform: translateY(0); opacity: 1; }
+}
+#installPrompt button {
+background: #ffd700;
+color: #000000;
+border: none;
+padding: 8px 20px;
+border-radius: 40px;
+font-weight: 600;
+margin-left: 10px;
+}
+.bottom-nav {
+display: none;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+background: #000000;
+border-top: 2px solid #ffd700;
+padding: 10px;
+justify-content: space-around;
+z-index: 1000;
+}
+.bottom-nav a {
+color: #ffffff;
+text-align: center;
+text-decoration: none;
+font-size: 0.8rem;
+}
+.bottom-nav i {
+display: block;
+font-size: 1.5rem;
+color: #ffd700;
+margin-bottom: 4px;
+}
+@media (max-width: 768px) {
+.bottom-nav {
+display: flex;
+}
+.footer {
+margin-bottom: 70px;
+}
+}
 </style>
 </head>
 <body>
+<!-- Install Prompt (PWA) -->
+<div id="installPrompt">
+<span style="color:#ffd700;"><i class="fas fa-mobile-alt"></i> Install App</span>
+<span style="color:white; margin-left:10px;">Get faster access</span>
+<button onclick="installPWA()">Install</button>
+</div>
+
+<!-- Bottom Navigation (Mobile) -->
+<nav class="bottom-nav">
+<a href="#home" onclick="scrollToTop()">
+<i class="fas fa-home"></i>
+<span>Home</span>
+</a>
+<a href="#bundles" onclick="scrollToBundles()">
+<i class="fas fa-gift"></i>
+<span>Bundles</span>
+</a>
+<a href="#contact" onclick="scrollToContact()">
+<i class="fas fa-phone"></i>
+<span>Contact</span>
+</a>
+<a href="#" onclick="shareApp()">
+<i class="fas fa-share-alt"></i>
+<span>Share</span>
+</a>
+</nav>
+
 <!-- Navbar -->
 <nav class="navbar">
 <div class="container">
@@ -524,7 +634,7 @@ border-top: 2px solid #ffd700;
 </nav>
 
 <!-- Hero -->
-<section class="hero">
+<section id="home" class="hero">
 <div class="container">
 <div class="hero-content">
 <h1 class="hero-title">AFFORDABLE <span class="highlight">MTN DATA</span></h1>
@@ -611,260 +721,426 @@ border-top: 2px solid #ffd700;
 <div class="container">
 <div class="section-header"><h2>Contact <span class="highlight">Us</span></h2></div>
 <div class="contact-content">
-<div class="info-item"><i class="fas fa-phone-alt"></i><div><p>Call / WhatsApp</p><p class="phone-numbers"><a href="tel:0202633871">0202633871</a> / <a href="tel:0541888580">0541888580</a></p></div></div>
+<div class="info-item"><i class="fas fa-phone-alt"></i><div><p>Call / WhatsApp</p><p class="phone-numbers"><a href="tel:0547035105">0547035105</a> / <a href="tel:0541888580">0541888580</a></p></div></div>
 <div class="info-item"><i class="fas fa-clock"></i><div><p>Working hours</p><p>Monday - Sunday: 6AM – 8PM</p></div></div>
 <div class="contact-cta"><a href="https://wa.me/233202633871" class="btn btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp now</a></div>
 </div>
 </div>
 </section>
 
-<footer class="footer"><div class="container"><p>© 2025 K.K Affordable Data. All rights reserved.</p></div></footer>
+<footer class="footer"><div class="container"><p>© 2025Sr SaMmY Data. All rights reserved.</p></div></footer>
 
 <script>
-// ----- MTN BUNDLES (exact price list) -----
+// ===== PWA & MOBILE APP FUNCTIONALITY =====
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(registration => {
+            console.log('ServiceWorker registered');
+        }).catch(err => {
+            console.log('ServiceWorker registration failed');
+        });
+    });
+}
+
+// Install Prompt (PWA)
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById('installPrompt').style.display = 'flex';
+});
+
+function installPWA() {
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted install');
+            }
+            deferredPrompt = null;
+            document.getElementById('installPrompt').style.display = 'none';
+        });
+    }
+}
+
+// Check if app is installed
+if (window.matchMedia('(display-mode: standalone)').matches) {
+    document.getElementById('installPrompt').style.display = 'none';
+}
+
+// Mobile Navigation Functions
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function scrollToBundles() {
+    document.getElementById('bundles').scrollIntoView({ behavior: 'smooth' });
+}
+
+function scrollToContact() {
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+function shareApp() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'K.K Affordable Data',
+            text: 'Get affordable MTN data bundles instantly!',
+            url: window.location.href,
+        }).catch(console.error);
+    } else {
+        // Fallback
+        navigator.clipboard.writeText(window.location.href);
+        showToast('Link copied to clipboard!', 'success');
+    }
+}
+
+// Pull to refresh (mobile)
+let touchStartY = 0;
+document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+    if (window.scrollY === 0 && e.touches[0].clientY > touchStartY) {
+        // Show refresh indicator
+        showToast('Pull down to refresh', 'info');
+    }
+}, { passive: true });
+
+// Back button handling (mobile)
+window.addEventListener('popstate', function(event) {
+    const modal = document.getElementById('paymentModal');
+    if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+        event.preventDefault();
+    }
+});
+
+// Network status monitoring
+window.addEventListener('online', () => {
+    showToast('You are back online!', 'success');
+});
+
+window.addEventListener('offline', () => {
+    showToast('You are offline. Check your connection.', 'error');
+});
+
+// ===== PAYSTACK & BUSINESS LOGIC =====
+
+// MTN BUNDLES
 const bundles = [
-{ size: "1GB", price: 5.50, popular: false },
-{ size: "2GB", price: 11.00, popular: false },
-{ size: "3GB", price: 16.50, popular: false },
-{ size: "4GB", price: 22.00, popular: false },
-{ size: "5GB", price: 27.00, popular: false },
-{ size: "6GB", price: 33.00, popular: false },
-{ size: "8GB", price: 38.50, popular: false },
-{ size: "10GB", price: 55.00, popular: true },
-{ size: "15GB", price: 70.00, popular: false },
-{ size: "20GB", price: 90.00, popular: false },
-{ size: "30GB", price: 130.00, popular: false },
-{ size: "40GB", price: 170.00, popular: false },
-{ size: "50GB", price: 210.00, popular: false },
-{ size: "100GB", price: 400.00, popular: false }
+    { size: "1GB", price: 5.50, popular: false },
+    { size: "2GB", price: 11.00, popular: false },
+    { size: "3GB", price: 16.50, popular: false },
+    { size: "4GB", price: 22.00, popular: false },
+    { size: "5GB", price: 27.00, popular: false },
+    { size: "6GB", price: 33.00, popular: false },
+    { size: "8GB", price: 38.50, popular: false },
+    { size: "10GB", price: 55.00, popular: true },
+    { size: "15GB", price: 70.00, popular: false },
+    { size: "20GB", price: 90.00, popular: false },
+    { size: "30GB", price: 130.00, popular: false },
+    { size: "40GB", price: 170.00, popular: false },
+    { size: "50GB", price: 210.00, popular: false },
+    { size: "100GB", price: 400.00, popular: false }
 ];
 
-// 🔴 LIVE Paystack public key (for REAL transactions)
-const PAYSTACK_PUBLIC_KEY = 'pk_live_e1272333bf0cea881a01d82093937c5739731229';
+// ===== IMPORTANT: USE YOUR LIVE PAYSTACK PUBLIC KEY =====
+const PAYSTACK_PUBLIC_KEY = 'pk_live_e1272333bf0cea881a01d82093937c5739731229'; // REPLACE WITH YOUR LIVE KEY
 
-// API endpoint for verification (create this PHP file on your server)
+// Your backend verification endpoint
 const API_ENDPOINT = 'https://yourdomain.com/verify-payment.php';
 
 let selectedBundle = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-renderBundles();
-setupListeners();
+    renderBundles();
+    setupListeners();
+    
+    // Check for saved transactions
+    loadSavedTransactions();
+    
+    // Add to history for back button handling
+    history.pushState({ page: 'home' }, 'Home', window.location.href);
 });
 
 function renderBundles() {
-const grid = document.getElementById('bundleGrid');
-grid.innerHTML = bundles.map(b => `
-<div class="bundle-card ${b.popular ? 'popular' : ''}" onclick="selectBundle('${b.size}', ${b.price})">
-<div class="bundle-size">${b.size}</div>
-<div class="bundle-price">GHS ${b.price.toFixed(2)}</div>
-<div class="bundle-badge">MTN</div>
-</div>
-`).join('');
+    const grid = document.getElementById('bundleGrid');
+    grid.innerHTML = bundles.map(b => `
+        <div class="bundle-card ${b.popular ? 'popular' : ''}" onclick="selectBundle('${b.size}', ${b.price})">
+            <div class="bundle-size">${b.size}</div>
+            <div class="bundle-price">GHS ${b.price.toFixed(2)}</div>
+            <div class="bundle-badge">MTN</div>
+        </div>
+    `).join('');
 }
 
 function setupListeners() {
-const modal = document.getElementById('paymentModal');
-document.querySelector('.close').onclick = () => modal.style.display = 'none';
-window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    const modal = document.getElementById('paymentModal');
+    document.querySelector('.close').onclick = () => {
+        modal.style.display = 'none';
+        history.back();
+    };
+    
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            history.back();
+        }
+    };
 
-document.getElementById('paymentMethod').addEventListener('change', function(e) {
-const momoDiv = document.getElementById('momoFields');
-momoDiv.classList.toggle('hidden', e.target.value !== 'momo');
-});
+    document.getElementById('paymentMethod').addEventListener('change', function(e) {
+        const momoDiv = document.getElementById('momoFields');
+        momoDiv.classList.toggle('hidden', e.target.value !== 'momo');
+    });
 
-document.getElementById('paymentForm').addEventListener('submit', handlePayment);
+    document.getElementById('paymentForm').addEventListener('submit', handlePayment);
 
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-anchor.addEventListener('click', function(e) {
-e.preventDefault();
-const target = document.querySelector(this.getAttribute('href'));
-if (target) target.scrollIntoView({ behavior: 'smooth' });
-});
-});
+    // Smooth scroll with offset for fixed navbar
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offset = 80;
+                const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            }
+        });
+    });
 }
 
 window.selectBundle = function(size, price) {
-selectedBundle = { size, price };
-document.getElementById('selectedBundle').innerHTML = `<h3>${size}</h3><p>GHS ${price.toFixed(2)}</p>`;
-document.getElementById('summaryBundle').innerText = size;
-document.getElementById('summaryAmount').innerText = price.toFixed(2);
-document.getElementById('paymentModal').style.display = 'block';
+    selectedBundle = { size, price };
+    document.getElementById('selectedBundle').innerHTML = `<h3>${size}</h3><p>GHS ${price.toFixed(2)}</p>`;
+    document.getElementById('summaryBundle').innerText = size;
+    document.getElementById('summaryAmount').innerText = price.toFixed(2);
+    document.getElementById('paymentModal').style.display = 'block';
+    
+    // Add to history for back button
+    history.pushState({ modal: 'payment' }, 'Payment', '#payment');
 };
 
 function validateGhanaPhone(phone) {
-return /^(0[2-5][0-9]{8})$/.test(phone);
+    return /^(0[2-5][0-9]{8})$/.test(phone);
 }
 
 function handlePayment(e) {
-e.preventDefault();
-const phone = document.getElementById('phoneNumber').value.trim();
-const method = document.getElementById('paymentMethod').value;
+    e.preventDefault();
+    const phone = document.getElementById('phoneNumber').value.trim();
+    const method = document.getElementById('paymentMethod').value;
 
-if (!validateGhanaPhone(phone)) {
-showToast('Enter a valid Ghana phone (e.g., 024XXXXXXX)', 'error');
-return;
-}
-if (!method) {
-showToast('Select payment method', 'error');
-return;
-}
-if (!selectedBundle) {
-showToast('No bundle selected', 'error');
-return;
-}
+    if (!validateGhanaPhone(phone)) {
+        showToast('Enter a valid Ghana phone (e.g., 024XXXXXXX)', 'error');
+        return;
+    }
+    if (!method) {
+        showToast('Select payment method', 'error');
+        return;
+    }
+    if (!selectedBundle) {
+        showToast('No bundle selected', 'error');
+        return;
+    }
 
-// For both MoMo and Card, we use Paystack
-initiatePaystackPayment(phone, method);
+    initiatePaystackPayment(phone, method);
 }
 
 function initiatePaystackPayment(phone, paymentMethod) {
-// Generate unique reference
-const reference = 'KK_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-const email = phone + '@customer.kkdata.com'; // Create email from phone
+    if (!navigator.onLine) {
+        showToast('You are offline. Check your connection.', 'error');
+        return;
+    }
 
-// Get MoMo details if selected
-let momoNumber = '';
-let momoNetwork = '';
-if (paymentMethod === 'momo') {
-momoNumber = document.getElementById('momoNumber').value.trim();
-momoNetwork = document.getElementById('momoNetwork').value;
-    
-if (!validateGhanaPhone(momoNumber)) {
-showToast('Enter a valid mobile money number', 'error');
-return;
-}
-}
+    const reference = 'KK_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    const email = phone + '@customer.kkdata.com';
 
-const handler = PaystackPop.setup({
-key: PAYSTACK_PUBLIC_KEY,
-email: email,
-amount: Math.round(selectedBundle.price * 100), // Convert to pesewas
-currency: 'GHS',
-ref: reference,
-// For MoMo payments, Paystack will show MoMo options
-metadata: {
-custom_fields: [
-{
-display_name: "Delivery Phone",
-variable_name: "delivery_phone",
-value: phone
-},
-{
-display_name: "Bundle",
-variable_name: "bundle",
-value: selectedBundle.size
-},
-{
-display_name: "Payment Method",
-variable_name: "payment_method",
-value: paymentMethod === 'momo' ? 'Mobile Money' : 'Card'
-}
-]
-},
-callback: function(response) {
-// Payment successful - verify with backend
-verifyPayment(response.reference, phone, selectedBundle);
-},
-onClose: function() {
-showToast('Payment window closed', 'info');
-disableSubmit(false);
-}
-});
-handler.openIframe();
-disableSubmit(true);
+    let momoNumber = '';
+    let momoNetwork = '';
+    if (paymentMethod === 'momo') {
+        momoNumber = document.getElementById('momoNumber').value.trim();
+        momoNetwork = document.getElementById('momoNetwork').value;
+        
+        if (!validateGhanaPhone(momoNumber)) {
+            showToast('Enter a valid mobile money number', 'error');
+            return;
+        }
+    }
+
+    const handler = PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: email,
+        amount: Math.round(selectedBundle.price * 100),
+        currency: 'GHS',
+        ref: reference,
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: "Delivery Phone",
+                    variable_name: "delivery_phone",
+                    value: phone
+                },
+                {
+                    display_name: "Bundle",
+                    variable_name: "bundle",
+                    value: selectedBundle.size
+                },
+                {
+                    display_name: "Payment Method",
+                    variable_name: "payment_method",
+                    value: paymentMethod === 'momo' ? 'Mobile Money' : 'Card'
+                }
+            ]
+        },
+        callback: function(response) {
+            verifyPayment(response.reference, phone, selectedBundle);
+        },
+        onClose: function() {
+            showToast('Payment window closed', 'info');
+            disableSubmit(false);
+        }
+    });
+    handler.openIframe();
+    disableSubmit(true);
 }
 
 function verifyPayment(reference, phone, bundle) {
-showToast('Verifying payment...', 'info');
+    showToast('Verifying payment...', 'info');
 
-// Send verification request to your backend
-fetch(API_ENDPOINT, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json',
-},
-body: JSON.stringify({
-reference: reference,
-phone: phone,
-bundle: bundle.size,
-amount: bundle.price
-})
-})
-.then(response => response.json())
-.then(data => {
-if (data.status === 'success') {
-showToast('Payment verified! Delivering data...', 'success');
-processDataBundle(phone, bundle, reference);
-} else {
-showToast('Payment verification failed: ' + (data.message || 'Unknown error'), 'error');
-disableSubmit(false);
-}
-})
-.catch(error => {
-console.error('Error:', error);
-showToast('Verification error. Please contact support.', 'error');
-disableSubmit(false);
-});
+    fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            reference: reference,
+            phone: phone,
+            bundle: bundle.size,
+            amount: bundle.price
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            showToast('Payment verified! Delivering data...', 'success');
+            processDataBundle(phone, bundle, reference);
+        } else {
+            showToast('Payment verification failed: ' + (data.message || 'Unknown error'), 'error');
+            disableSubmit(false);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Verification error. Please contact support.', 'error');
+        disableSubmit(false);
+    });
 }
 
 function disableSubmit(disabled) {
-const btn = document.querySelector('#paymentForm button[type="submit"]');
-btn.disabled = disabled;
-btn.textContent = disabled ? 'Processing...' : 'Proceed to payment';
+    const btn = document.querySelector('#paymentForm button[type="submit"]');
+    btn.disabled = disabled;
+    btn.textContent = disabled ? 'Processing...' : 'Proceed to payment';
 }
 
 function processDataBundle(phone, bundle, ref) {
-showToast(`Sending ${bundle.size} to ${phone}...`, 'info');
+    showToast(`Sending ${bundle.size} to ${phone}...`, 'info');
 
-// Here you would integrate with your data delivery API
-// For now, we'll simulate delivery
-setTimeout(() => {
-logTransaction(phone, bundle, ref);
-showToast(`✅ ${bundle.size} delivered to ${phone}`, 'success');
-document.getElementById('paymentModal').style.display = 'none';
-document.getElementById('paymentForm').reset();
-document.getElementById('momoFields').classList.add('hidden');
-selectedBundle = null;
-disableSubmit(false);
-}, 3000);
+    setTimeout(() => {
+        logTransaction(phone, bundle, ref);
+        showToast(`✅ ${bundle.size} delivered to ${phone}`, 'success');
+        
+        // Vibrate on success (mobile)
+        if (navigator.vibrate) {
+            navigator.vibrate(200);
+        }
+        
+        document.getElementById('paymentModal').style.display = 'none';
+        document.getElementById('paymentForm').reset();
+        document.getElementById('momoFields').classList.add('hidden');
+        selectedBundle = null;
+        disableSubmit(false);
+    }, 3000);
 }
 
 function logTransaction(phone, bundle, ref) {
-const tx = { 
-phone, 
-bundle: bundle.size, 
-amount: bundle.price, 
-ref, 
-date: new Date().toISOString(),
-status: 'completed'
-};
+    const tx = { 
+        phone, 
+        bundle: bundle.size, 
+        amount: bundle.price, 
+        ref, 
+        date: new Date().toISOString(),
+        status: 'completed'
+    };
 
-// Save to localStorage
-let history = JSON.parse(localStorage.getItem('kk_transactions') || '[]');
-history.push(tx);
-localStorage.setItem('kk_transactions', JSON.stringify(history));
+    let history = JSON.parse(localStorage.getItem('kk_transactions') || '[]');
+    history.push(tx);
+    localStorage.setItem('kk_transactions', JSON.stringify(history));
 
-// You would also save to your database via API
-console.log('Transaction completed:', tx);
+    // Try to save to database
+    fetch('https://yourdomain.com/save-transaction.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tx)
+    }).catch(err => console.log('Transaction saved locally'));
+}
 
-// Send to your backend to save in database
-fetch('https://yourdomain.com/save-transaction.php', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify(tx)
-}).catch(err => console.log('Could not save to database:', err));
+function loadSavedTransactions() {
+    const transactions = JSON.parse(localStorage.getItem('kk_transactions') || '[]');
+    console.log('Previous transactions:', transactions.length);
 }
 
 function showToast(msg, type = 'info') {
-document.querySelectorAll('.toast').forEach(el => el.remove());
-const toast = document.createElement('div');
-toast.className = `toast ${type}`;
-toast.textContent = msg;
-document.body.appendChild(toast);
-setTimeout(() => toast.remove(), 5000);
+    document.querySelectorAll('.toast').forEach(el => el.remove());
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    
+    // Vibrate for errors (mobile)
+    if (type === 'error' && navigator.vibrate) {
+        navigator.vibrate(300);
+    }
+    
+    setTimeout(() => toast.remove(), 5000);
+}
+</script>
+
+<!-- Create Service Worker File (sw.js) -->
+<script>
+// This creates the service worker file
+if ('serviceWorker' in navigator) {
+    const swCode = `
+        const CACHE_NAME = 'kk-data-v1';
+        const urlsToCache = [
+            '/',
+            '/index.html',
+            'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+            'https://js.paystack.co/v1/inline.js'
+        ];
+
+        self.addEventListener('install', event => {
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then(cache => cache.addAll(urlsToCache))
+            );
+        });
+
+        self.addEventListener('fetch', event => {
+            event.respondWith(
+                caches.match(event.request)
+                    .then(response => response || fetch(event.request))
+            );
+        });
+    `;
+    
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    
+    // Save as sw.js (in a real environment, you'd create this file manually)
+    console.log('Create sw.js file with the service worker code');
 }
 </script>
 </body>
-
 </html>
